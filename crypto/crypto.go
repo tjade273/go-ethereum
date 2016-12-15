@@ -28,14 +28,18 @@ import (
 	"os"
 
 	"encoding/hex"
+	"encoding/binary"
 	"errors"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto/ecies"
 	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 	"github.com/ethereum/go-ethereum/crypto/sha3"
+	"github.com/ethereum/go-ethereum/crypto/blake2b"
 	"github.com/ethereum/go-ethereum/rlp"
 	"golang.org/x/crypto/ripemd160"
+	"github.com/ethereum/go-ethereum/logger"
+	"github.com/ethereum/go-ethereum/logger/glog"
 )
 
 func Keccak256(data ...[]byte) []byte {
@@ -76,6 +80,34 @@ func Ripemd160(data []byte) []byte {
 	ripemd.Write(data)
 
 	return ripemd.Sum(nil)
+}
+
+func Blake2(data []byte) []byte {
+	if(len(data) != 160){
+		return make([]byte,0)
+	}
+
+	fmt.Println("Precompile recieved: ", len(data))
+	var h [8]uint64
+	for i := range h { //Possibly need a null assignment
+		h[i] = common.BytesToNumber(data[i*8:(i+1)*8])
+	}
+	var t, f [2]uint64
+	t[0] = common.BytesToNumber(data[64:136])
+	t[1] = common.BytesToNumber(data[136:144])
+	f[0] = common.BytesToNumber(data[144:152])
+	f[1] = common.BytesToNumber(data[152:160])
+
+	h = blake2b.BlakeCompress(h,data[64:128],t,f)
+	fmt.Println("Result: ", h)
+	glog.V(logger.Detail).Infoln("Result: ", h)
+	out := make([]byte,160)
+
+	for i := range h {
+		binary.BigEndian.PutUint64(out[i*8:(i+1)*8],h[i])
+	}
+
+	return out
 }
 
 // Ecrecover returns the public key for the private key that was used to

@@ -69,5 +69,7 @@ var (
 	MemoryGas            = big.NewInt(3)      // Times the address of the (highest referenced byte in memory + 1). NOTE: referencing happens on read, write and in instructions such as RETURN and CALL.
 	TxDataNonZeroGas     = big.NewInt(68)     // Per byte of data attached to a transaction that is not equal to zero. NOTE: Not payable on data of calls between transactions.
 
+	Blake2WordGas        = big.NewInt(6) // XKCD Change This Param
+	Blake2Gas            = big.NewInt(15) // XKCD
 	MaxCodeSize = 24576
 )

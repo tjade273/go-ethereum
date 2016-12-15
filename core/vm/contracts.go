@@ -18,6 +18,7 @@ package vm
 
 import (
 	"math/big"
+	"fmt"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -69,6 +70,12 @@ func PrecompiledContracts() map[string]*PrecompiledAccount {
 
 			return n.Add(n, params.IdentityGas)
 		}, memCpy},
+
+		string(common.LeftPadBytes([]byte{5}, 20)): &PrecompiledAccount{func(l int) *big.Int {
+			n := big.NewInt(int64(l+31) / 32)
+			n.Mul(n, params.Blake2WordGas)
+			return n.Add(n, params.Blake2Gas)
+		}, blake2Func},
 	}
 }
 
@@ -116,4 +123,15 @@ func ecrecoverFunc(in []byte) []byte {
 
 func memCpy(in []byte) []byte {
 	return in
+}
+
+func blake2Func(in []byte) []byte {
+	//return []byte{'x','k','c','d'} //XKCD: This is the important part!!!!!
+	//TODO: Check function sig
+	fmt.Println("Inlen: ", len(in))
+	glog.V(logger.Detail).Infoln("Inlen: ", len(in))
+	if(len(in) != 164){
+		return nil
+	}
+	return crypto.Blake2(in[4:])
 }
