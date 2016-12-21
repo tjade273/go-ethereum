@@ -38,8 +38,6 @@ import (
 	"github.com/ethereum/go-ethereum/crypto/blake2b"
 	"github.com/ethereum/go-ethereum/rlp"
 	"golang.org/x/crypto/ripemd160"
-	"github.com/ethereum/go-ethereum/logger"
-	"github.com/ethereum/go-ethereum/logger/glog"
 )
 
 func Keccak256(data ...[]byte) []byte {
