@@ -12,6 +12,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"hash"
+	"fmt"
 )
 
 const (
@@ -282,11 +283,15 @@ func (d *digest) checkSum() [Size]byte {
 
 func BlakeCompress(h [8]uint64, m []uint8, t [2]uint64, f [2]uint64) [8]uint64 {
 	d := new(digest)
+	fmt.Println("Compresss h: ", h)
+	fmt.Println("Compress m: ", m)
 	copy(d.h[:], h[:])
 	d.t[0] = t[0]
 	d.t[1] = t[1]
+	fmt.Println("Compress t: ", d.t)
 	d.f[0] = f[0]
 	d.f[1] = f[1]
+	fmt.Println("Compress f:", f)
 	blocks(d, m)
 	return d.h
 }

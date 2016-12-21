@@ -133,5 +133,5 @@ func blake2Func(in []byte) []byte {
 	if(len(in) != 164){
 		return nil
 	}
-	return crypto.Blake2(in[4:])
+	return crypto.Blake2b(in[4:])
 }

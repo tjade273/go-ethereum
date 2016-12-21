@@ -273,16 +273,20 @@ func TestPythonIntegration(t *testing.T) {
 
 func TestBLAKE2b(t *testing.T){
 	h, _ := hex.DecodeString("6a09e667f2bdc948bb67ae8584caa73b3c6ef372fe94f82ba54ff53a5f1d36f1510e527fade682d19b05688c2b3e6c1f1f83d9abfb41bd6b5be0cd19137e2179")
+	fmt.Println("h length: ", len(h))
 	block := make([]byte, 128)
 	m, _ :=  hex.DecodeString("deadbeef")
 	copy(block[:4], m)
-	t := make([]byte,16)
-	t[0] = 4
-	f := repeat([]byte{0xff}, 16)
+	c := make([]byte,16)
+	c[7] = 4
+	f := bytes.Repeat([]byte{0xff}, 8)
+	f = append(f,make([]byte, 8)...)
 	msg := h
-	msg = append(msg, m...)
-	msg = append(msg, t...)
-	msg = append(msg, f..)
+	msg = append(msg, block...)
+	msg = append(msg, c...)
+	msg = append(msg, f...)
+	fmt.Println(msg)
+	fmt.Println(len(msg))
 	exp, _ := hex.DecodeString("61ee79a9dd3ef36021627021ddabd2b665667a1146de57bec04a97f0063714c9dd9b3230a1e2158d852d1cc790fcb623ef74d7b3b1025c12a117051b247ad020")
-	checkhash(t, "BLAKE2b", BLAKE2b, msg, exp)
+	checkhash(t, "BLAKE2b", Blake2b, msg, exp)
 }

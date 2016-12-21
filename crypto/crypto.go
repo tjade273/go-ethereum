@@ -83,25 +83,26 @@ func Ripemd160(data []byte) []byte {
 }
 
 func Blake2b(data []byte) []byte {
-	if(len(data) != 160){
+	if(len(data) != 224){
 		return make([]byte,0)
 	}
 
 	fmt.Println("Precompile recieved: ", len(data))
 	var h [8]uint64
 	for i := range h { //Possibly need a null assignment
-		h[i] = common.BytesToNumber(data[i*8:(i+1)*8])
+		h[i] = binary.BigEndian.Uint64(data[i*8:(i+1)*8])
+		fmt.Println("Hi: ",i,data[i*8:(i+1)*8])
 	}
 	var t, f [2]uint64
-	t[0] = common.BytesToNumber(data[64:136])
-	t[1] = common.BytesToNumber(data[136:144])
-	f[0] = common.BytesToNumber(data[144:152])
-	f[1] = common.BytesToNumber(data[152:160])
+	t[0] = binary.BigEndian.Uint64(data[192:200])
+	t[1] = binary.BigEndian.Uint64(data[200:208])
+	f[0] = binary.BigEndian.Uint64(data[208:216])
+	f[1] = binary.BigEndian.Uint64(data[216:224])
 
-	h = blake2b.BlakeCompress(h,data[64:128],t,f)
+	h = blake2b.BlakeCompress(h,data[64:192],t,f)
 	fmt.Println("Result: ", h)
 	glog.V(logger.Detail).Infoln("Result: ", h)
-	out := make([]byte,160)
+	out := make([]byte,64)
 
 	for i := range h {
 		binary.BigEndian.PutUint64(out[i*8:(i+1)*8],h[i])
