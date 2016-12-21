@@ -82,7 +82,7 @@ func Ripemd160(data []byte) []byte {
 	return ripemd.Sum(nil)
 }
 
-func Blake2(data []byte) []byte {
+func Blake2b(data []byte) []byte {
 	if(len(data) != 160){
 		return make([]byte,0)
 	}
