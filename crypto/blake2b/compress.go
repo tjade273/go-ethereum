@@ -9,10 +9,6 @@
 
 package blake2b
 
-import (
-	"fmt"
-)
-
 func blocks(d *digest, p []uint8) {
 	h0, h1, h2, h3, h4, h5, h6, h7 := d.h[0], d.h[1], d.h[2], d.h[3], d.h[4], d.h[5], d.h[6], d.h[7]
 
@@ -33,9 +29,6 @@ func blocks(d *digest, p []uint8) {
 		v14 := iv[6] ^ d.f[0]
 		v15 := iv[7] ^ d.f[1]
 		var m [16]uint64
-		fmt.Println("H: ", d.h)
-		fmt.Println("V: ", v0,v1,v2,v3,v4,v5,v6,v7,v8,v9,v10,v11,v12,v13,v14,v15)
-		fmt.Println("T: ", d.t)
 		j := 0
 		for i := 0; i < 16; i++ {
 			m[i] = uint64(p[j]) | uint64(p[j+1])<<8 | uint64(p[j+2])<<16 | uint64(p[j+3])<<24 |

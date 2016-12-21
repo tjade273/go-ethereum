@@ -87,11 +87,9 @@ func Blake2b(data []byte) []byte {
 		return make([]byte,0)
 	}
 
-	fmt.Println("Precompile recieved: ", len(data))
 	var h [8]uint64
 	for i := range h { //Possibly need a null assignment
 		h[i] = binary.BigEndian.Uint64(data[i*8:(i+1)*8])
-		fmt.Println("Hi: ",i,data[i*8:(i+1)*8])
 	}
 	var t, f [2]uint64
 	t[0] = binary.BigEndian.Uint64(data[192:200])
@@ -100,8 +98,6 @@ func Blake2b(data []byte) []byte {
 	f[1] = binary.BigEndian.Uint64(data[216:224])
 
 	h = blake2b.BlakeCompress(h,data[64:192],t,f)
-	fmt.Println("Result: ", h)
-	glog.V(logger.Detail).Infoln("Result: ", h)
 	out := make([]byte,64)
 
 	for i := range h {
